@@ -9,29 +9,31 @@ pipeline {
             }
         }
 
-    stage('Test') {
-    steps {
-        sh '''
-            docker run --rm \
-              -v "$PWD:/app" \
-              -w /app \
-              python:3.14-slim \
-              sh -c "pip install -r app/requirements.txt && python -m pytest"
-        '''
-    }
-}
+        stage('Test') {
+            steps {
+                sh '''
+                    docker run --rm \
+                      --volumes-from jenkins \
+                      -w /var/jenkins_home/workspace/devops-sre-assessment \
+                      python:3.14-slim \
+                      sh -c "pip install -r app/requirements.txt && python -m pytest"
+                '''
+            }
+        }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t devops-sre-api .'
+                sh '''
+                    docker build -t devops-sre-api .
+                '''
             }
         }
 
         stage('Deploy') {
             steps {
                 sh '''
-                    docker compose down
-                    docker compose up -d
+                    docker compose down || true
+                    docker compose up -d --build
                 '''
             }
         }
@@ -40,9 +42,23 @@ pipeline {
             steps {
                 sh '''
                     sleep 10
-                    curl -f http://localhost/health
+                    curl -f http://host.docker.internal/health
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI/CD Pipeline completed successfully!'
+        }
+
+        failure {
+            echo 'CI/CD Pipeline failed!'
+        }
+
+        always {
+            echo 'Pipeline execution completed.'
         }
     }
 }
