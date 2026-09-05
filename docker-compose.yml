@@ -1,0 +1,47 @@
+services:
+
+  api:
+    build: .
+    container_name: devops-sre-api
+    environment:
+      APP_NAME: ${APP_NAME}
+      APP_VERSION: ${APP_VERSION}
+    expose:
+      - "8000"
+    networks:
+      - devops-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: devops-sre-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+    networks:
+      - devops-network
+  prometheus:
+      image: prom/prometheus:latest
+      container_name: devops-sre-prometheus
+      ports:
+        - "9090:9090"
+      volumes:
+        - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      depends_on:
+        - api
+      networks:
+        - devops-network
+  grafana:
+    image: grafana/grafana:latest
+    container_name: devops-sre-grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - devops-network      
+networks:
+  devops-network:
+    driver: bridge
