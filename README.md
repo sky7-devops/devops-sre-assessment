@@ -76,17 +76,9 @@ FastAPI also provides standard HTTP error handling for invalid routes. Unexpecte
 
 The system is organized around a containerized FastAPI application with Nginx handling incoming HTTP traffic, Jenkins handling CI/CD automation, and Prometheus/Grafana providing observability.
 
-Add the architecture image to the repository using the following path:
 
-```text
-screenshots/architecture.png
-```
-
-Then reference it in this section with:
-
-```markdown
 ![Architecture Diagram](screenshots/architecture.png)
-```
+
 
 The architecture should visually show:
 
@@ -431,34 +423,29 @@ Show the Jenkins build with all pipeline stages completed successfully.
 
 ### 3. Nginx / API Health Check
 
-```text
-screenshots/nginx-health.png
-```
+![Nginx / API Health Check](screenshots/nginx-health.png)
 
 Show the `/health` endpoint responding successfully through Nginx.
 
 ### 4. Prometheus Target
 
-```text
-screenshots/prometheus-target.png
-```
+![Prometheus Target](screenshots/prometheus-target.png)
 
 Show the FastAPI Prometheus target with status `UP`.
 
 ### 5. Grafana Dashboard
 
-```text
-screenshots/grafana-dashboard.png
-```
+![Grafana Dashboard](screenshots/grafana-dashboard.png)
 
 Show the completed monitoring dashboard with request rate, request count, 5xx errors, and latency.
 
 ### 6. Grafana Alert
+![Grafana Alert ](screenshots/grafana-alert.png)
 
-```text
-screenshots/grafana-alert.png
-```
+
 
 Show the `High 5xx Error Rate` alert rule and its configured notification contact point.
 
 These screenshots provide visual evidence of the CI/CD pipeline, reverse proxy, metrics collection, dashboard, and alerting configuration.
+
+
