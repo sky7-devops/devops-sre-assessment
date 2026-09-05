@@ -38,6 +38,7 @@ pipeline {
 
                     docker run -d \
                       --name devops-sre-api \
+                      --network devops-sre-assessment_devops-network \
                       -p 8000:8000 \
                       -e APP_NAME="DevOps SRE Assessment API" \
                       -e APP_VERSION="1.0.0" \
