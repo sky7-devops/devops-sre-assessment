@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
 
         stage('Checkout') {
@@ -12,11 +16,9 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                    docker run --rm \
-                      --volumes-from jenkins \
-                      -w /var/jenkins_home/workspace/devops-sre-assessment \
-                      python:3.14-slim \
-                      sh -c "pip install -r app/requirements.txt && python -m pytest"
+                    python3 -m venv .venv
+                    .venv/bin/pip install -r app/requirements.txt
+                    .venv/bin/python -m pytest
                 '''
             }
         }
@@ -32,8 +34,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    docker compose down || true
-                    docker compose up -d --build
+                    docker rm -f devops-sre-api 2>/dev/null || true
+
+                    docker run -d \
+                      --name devops-sre-api \
+                      -p 8000:8000 \
+                      -e APP_NAME="DevOps SRE Assessment API" \
+                      -e APP_VERSION="1.0.0" \
+                      devops-sre-api
                 '''
             }
         }
@@ -41,8 +49,8 @@ pipeline {
         stage('Health Check') {
             steps {
                 sh '''
-                    sleep 10
-                    curl -f http://host.docker.internal/health
+                    sleep 5
+                    curl -f http://host.docker.internal:8000/health
                 '''
             }
         }
@@ -55,10 +63,6 @@ pipeline {
 
         failure {
             echo 'CI/CD Pipeline failed!'
-        }
-
-        always {
-            echo 'Pipeline execution completed.'
         }
     }
 }
