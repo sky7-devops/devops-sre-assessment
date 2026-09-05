@@ -22,10 +22,8 @@ def test_health():
 
 def test_info():
     response = client.get("/api/info")
-
     assert response.status_code == 200
-    assert response.json()["application"] == "devops-sre-assessment"
-
+    assert response.json()["application"] == "DevOps SRE Assessment API"
 
 def test_not_found():
     response = client.get("/does-not-exist")
