@@ -9,15 +9,17 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                sh '''
-                    python3 -m venv .venv
-                    .venv/bin/pip install -r app/requirements.txt
-                    .venv/bin/python -m pytest
-                '''
-            }
-        }
+    stage('Test') {
+    steps {
+        sh '''
+            docker run --rm \
+              -v "$PWD:/app" \
+              -w /app \
+              python:3.14-slim \
+              sh -c "pip install -r app/requirements.txt && python -m pytest"
+        '''
+    }
+}
 
         stage('Docker Build') {
             steps {
