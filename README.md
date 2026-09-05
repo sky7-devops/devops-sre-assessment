@@ -419,17 +419,13 @@ Recommended files:
 
 ### 1. Architecture
 
-```text
-screenshots/architecture.png
-```
+![Architecture Diagram](screenshots/architecture.png)
 
 A clean architecture diagram showing the relationship between GitHub, Jenkins, Docker/FastAPI, Nginx, Prometheus, and Grafana.
 
 ### 2. Jenkins Pipeline
 
-```text
-screenshots/jenkins-success.png
-```
+![Jenkins Pipeline](screenshots/jenkins-success.png)
 
 Show the Jenkins build with all pipeline stages completed successfully.
 
